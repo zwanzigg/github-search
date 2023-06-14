@@ -2,28 +2,18 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQuery } from '@apollo/client';
-import { IssuesList } from './IssuesList';
-import SearchBar from './SearchBar';
 import { ISSUES_QUERY } from '../queries/issues.query';
 import { IssueStatus, SearchNodes } from '../common/types';
 import {
-  Alert,
-  FormControlLabel,
-  FormGroup,
-  IconButton,
-  Switch,
-  Typography,
-} from '@mui/material';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { LinearLoader } from './LinearLoader';
-import { ContentContainer } from './styled/ContentContainer';
-import { NavigateContainer } from './styled/NavigateContainer';
-import { DEFAULT_SEARCH_NODES } from '../common/constants';
-import { filterOutNotIssues, formatSearchIssuesQuery } from '../common/utils';
+  DEFAULT_SEARCH_NODES,
+  DEFAULT_SEARCH_VARIABLES,
+  SEARCH_LIMIT,
+} from '../common/constants';
+import { formatSearchIssuesQuery } from '../common/utils';
+import { SearchBarContainer } from './SearchBarContainer';
+import { SearchResultsContainer } from './SearchResultsContainer';
 
 export function IssuesContainer() {
-  const SEARCH_LIMIT = 2;
   const [input, setInput] = useState('');
   const [status, setStatus] = useState<IssueStatus>('open');
 
@@ -33,38 +23,15 @@ export function IssuesContainer() {
     error,
     data = DEFAULT_SEARCH_NODES,
   } = useQuery<SearchNodes>(ISSUES_QUERY, {
-    variables: {
-      text: formatSearchIssuesQuery(input, status),
-      first: SEARCH_LIMIT,
-      after: null,
-      before: null,
-      last: null,
-    },
+    variables: DEFAULT_SEARCH_VARIABLES,
     nextFetchPolicy: 'cache-first', // TODO: check this
   });
 
-  const getNextPage = () => {
-    refetch({
-      text: formatSearchIssuesQuery(input, status),
-      first: SEARCH_LIMIT,
-      after: data.search.pageInfo.endCursor,
-      before: null,
-      last: null,
-    });
-  };
-  const getPrevPage = () => {
-    refetch({
-      text: formatSearchIssuesQuery(input, status),
-      last: SEARCH_LIMIT,
-      before: data.search.pageInfo.startCursor,
-      after: null,
-      first: null,
-    });
-  };
   const triggerSearch = () => {
     refetch({
       text: formatSearchIssuesQuery(input, status),
       first: SEARCH_LIMIT,
+      last: null,
       after: null,
       before: null,
     });
@@ -77,62 +44,45 @@ export function IssuesContainer() {
     });
   }, []);
 
-  const issues = filterOutNotIssues(data.search.nodes);
-  const totalIssuesCount = data.search.issueCount;
-  const hasNextPage = data.search.pageInfo.hasNextPage;
-  const hasPreviousPage = data.search.pageInfo.hasPreviousPage;
-
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value || '';
     setInput(value);
+  };
+
+  const handleStatusChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean,
+  ) => {
+    const newStatus = checked ? 'open' : 'closed';
+    setStatus(newStatus);
+    refetch({
+      text: formatSearchIssuesQuery(input, newStatus),
+      first: SEARCH_LIMIT,
+      last: null,
+      after: null,
+      before: null,
+    });
   };
 
   return (
     <>
       <Grid xs={6} md={4}>
-        <ContentContainer>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Switch
-                  defaultChecked
-                  checked={status === 'open'}
-                  onChange={(event, checked) =>
-                    setStatus(checked ? 'open' : 'closed')
-                  }
-                />
-              }
-              label={status.toUpperCase()}
-            />
-          </FormGroup>
-          <SearchBar handleInput={handleInput} handleEnter={triggerSearch} />
-        </ContentContainer>
+        <SearchBarContainer
+          triggerSearch={triggerSearch}
+          handleInput={handleInputChange}
+          handleStatusChange={handleStatusChange}
+          status={status}
+        />
       </Grid>
       <Grid xs={6} md={8}>
-        <ContentContainer>
-          {loading ? (
-            <LinearLoader />
-          ) : error ? (
-            <Alert severity="error">{error.message}</Alert>
-          ) : (
-            <>
-              <Typography variant="h6" component="div">
-                Presented: {issues.length} of {totalIssuesCount}
-              </Typography>
-
-              <NavigateContainer>
-                <IconButton onClick={getPrevPage} disabled={!hasPreviousPage}>
-                  <ArrowBackIosNewIcon />
-                </IconButton>
-                <IconButton onClick={getNextPage} disabled={!hasNextPage}>
-                  <ArrowForwardIosIcon />
-                </IconButton>
-              </NavigateContainer>
-
-              <IssuesList list={issues} />
-            </>
-          )}
-        </ContentContainer>
+        <SearchResultsContainer
+          data={data}
+          error={error}
+          loading={loading}
+          refetch={refetch}
+          input={input}
+          status={status}
+        />
       </Grid>
     </>
   );

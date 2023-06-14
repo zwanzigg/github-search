@@ -4,15 +4,15 @@ import SearchIcon from '@mui/icons-material/Search';
 
 export const SearchBar: FC<{
   handleInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleEnter: () => void;
-}> = ({ handleEnter, handleInput }): ReactElement => {
+  triggerSearch: () => void;
+}> = ({ triggerSearch, handleInput }): ReactElement => {
   return (
     <Box style={{ width: '100%' }}>
       <TextField
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={handleEnter}>
+              <IconButton onClick={triggerSearch}>
                 <SearchIcon />
               </IconButton>
             </InputAdornment>
@@ -27,7 +27,7 @@ export const SearchBar: FC<{
         onKeyPress={(ev: React.KeyboardEvent<HTMLDivElement>) => {
           if (ev?.key === 'Enter') {
             ev.preventDefault();
-            handleEnter();
+            triggerSearch();
           }
         }}
       />

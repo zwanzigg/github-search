@@ -1,3 +1,6 @@
+import { formatSearchIssuesQuery } from './utils';
+import { SEARCH_LIMIT } from './constants';
+
 export interface SearchNodes {
   search: {
     issueCount: number;
@@ -40,3 +43,11 @@ export interface IssuesCommentsNode {
 }
 
 export type IssueStatus = 'open' | 'closed';
+
+export interface SearchVariables {
+  text: string;
+  first: number | null;
+  last: number | null;
+  after: string | null;
+  before: string | null;
+}

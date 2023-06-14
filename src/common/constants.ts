@@ -1,4 +1,5 @@
-import { SearchNodes } from './types';
+import { SearchNodes, SearchVariables } from './types';
+import { formatSearchIssuesQuery } from './utils';
 
 export const DEFAULT_SEARCH_NODES: SearchNodes = {
   search: {
@@ -12,4 +13,14 @@ export const DEFAULT_SEARCH_NODES: SearchNodes = {
       startCursor: null,
     },
   },
+};
+
+export const SEARCH_LIMIT = 2;
+
+export const DEFAULT_SEARCH_VARIABLES: SearchVariables = {
+  text: formatSearchIssuesQuery('', 'open'),
+  first: SEARCH_LIMIT,
+  after: null,
+  before: null,
+  last: null,
 };
