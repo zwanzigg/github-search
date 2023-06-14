@@ -1,6 +1,3 @@
-import { formatSearchIssuesQuery } from './utils';
-import { SEARCH_LIMIT } from './constants';
-
 export interface SearchNodes {
   search: {
     issueCount: number;
@@ -20,6 +17,7 @@ export interface SearchNodes {
 export interface IssuesNode {
   author: NodeAuthor;
   body: string;
+  bodyHTML: string;
   createdAt: Date;
   title: string;
   comments: IssuesComments;

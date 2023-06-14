@@ -36,6 +36,7 @@ export const ISSUES_QUERY = gql`
             url
           }
           body
+          bodyHTML
           createdAt
           title
           comments(first: 10) {

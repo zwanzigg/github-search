@@ -1,8 +1,7 @@
-import { FC, ReactElement } from 'react';
-import { FormControlLabel, FormGroup, Switch } from '@mui/material';
-import SearchBar from './SearchBar';
-import { ContentContainer } from './styled/ContentContainer';
 import * as React from 'react';
+import { FC, ReactElement } from 'react';
+import { FormControlLabel, Switch, Typography } from '@mui/material';
+import SearchBar from './SearchBar';
 import { IssueStatus } from '../common/types';
 
 export const SearchBarContainer: FC<{
@@ -20,20 +19,19 @@ export const SearchBarContainer: FC<{
   status,
 }): ReactElement => {
   return (
-    <ContentContainer>
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              defaultChecked
-              checked={status === 'open'}
-              onChange={handleStatusChange}
-            />
-          }
-          label={status.toUpperCase()}
-        />
-      </FormGroup>
+    <>
+      <FormControlLabel
+        color={'primary'}
+        control={
+          <Switch checked={status === 'open'} onChange={handleStatusChange} />
+        }
+        label={
+          <Typography variant={'body1'} color={'primary'}>
+            {status.toUpperCase()}
+          </Typography>
+        }
+      />
       <SearchBar handleInput={handleInput} triggerSearch={triggerSearch} />
-    </ContentContainer>
+    </>
   );
 };

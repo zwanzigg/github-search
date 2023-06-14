@@ -9,6 +9,9 @@ export const SearchBar: FC<{
   return (
     <Box style={{ width: '100%' }}>
       <TextField
+        id="filled-basic"
+        variant="filled"
+        color="primary"
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -24,7 +27,7 @@ export const SearchBar: FC<{
           width: '100%',
           margin: '10px auto',
         }}
-        onKeyPress={(ev: React.KeyboardEvent<HTMLDivElement>) => {
+        onKeyDown={(ev: React.KeyboardEvent<HTMLDivElement>) => {
           if (ev?.key === 'Enter') {
             ev.preventDefault();
             triggerSearch();

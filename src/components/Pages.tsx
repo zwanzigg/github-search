@@ -13,21 +13,21 @@ export const Pages = (): ReactElement => {
   const username = data?.viewer?.login;
   return (
     <Grid xs={12}>
-      <ContentContainer>
-        {loading ? (
-          <LinearLoader />
-        ) : error ? (
-          <Alert severity="error">{error.message}</Alert>
-        ) : (
-          <>
-            {username ? (
-              <Content username={username} />
-            ) : (
+      {loading ? (
+        <LinearLoader />
+      ) : error ? (
+        <Alert severity="error">{error.message}</Alert>
+      ) : (
+        <>
+          {username ? (
+            <Content username={username} />
+          ) : (
+            <ContentContainer>
               <Button onClick={() => login()}>LOGIN</Button>
-            )}
-          </>
-        )}
-      </ContentContainer>
+            </ContentContainer>
+          )}
+        </>
+      )}
     </Grid>
   );
 };

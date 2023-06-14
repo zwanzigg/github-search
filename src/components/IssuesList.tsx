@@ -1,44 +1,42 @@
-import React, { FC, ReactElement } from 'react';
-import { Stack } from '@mui/system';
-import { Paper, Box, Typography } from '@mui/material';
+import React, { FC, ReactElement, useEffect } from 'react';
+import { Box, List } from '@mui/material';
 import { IssuesNode } from '../common/types';
+import { NestedList } from './IssuesItem';
 
 export const IssuesList: FC<{
   list: IssuesNode[];
 }> = ({ list }): ReactElement => {
+  const [openedId, setOpenedId] = React.useState('');
+
+  const handleOpenIssue = (id: string) => {
+    setOpenedId(openedId === id ? '' : id);
+  };
+
+  useEffect(() => {
+    setOpenedId('');
+  }, [list]);
+
   return (
     <Box>
-      <Stack
-        spacing={2}
+      <List
         sx={{
-          overflow: 'auto',
-          maxHeight: 500,
+          width: '100%',
+          backgroundColor: 'background.paper',
         }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
       >
         {list.map((item: IssuesNode) =>
           item.id ? (
-            <Paper
+            <NestedList
               key={item.id}
-              sx={{
-                textAlign: 'left',
-              }}
-            >
-              <Typography>
-                <strong>Title:</strong> {item.title}
-              </Typography>
-              <Typography>
-                <strong>Author:</strong> {item.author?.login}
-              </Typography>
-              <Typography>
-                <strong>Body:</strong> {item.body}
-              </Typography>
-              <Typography>
-                <strong>Created at:</strong> {item.createdAt.toString()}
-              </Typography>
-            </Paper>
+              handleOpenIssue={handleOpenIssue}
+              openedId={openedId}
+              item={item}
+            />
           ) : null,
         )}
-      </Stack>
+      </List>
     </Box>
   );
 };
