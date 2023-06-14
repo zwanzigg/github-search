@@ -1,7 +1,10 @@
-import { IssuesNode } from './types';
+import { IssuesNode, IssueStatus } from './types';
 
-export const formatSearchIssuesQuery = (searchString: string) => {
-  return `repo:facebook/react type:issue in:title in:body in:comments ${searchString}`;
+export const formatSearchIssuesQuery = (
+  searchString: string,
+  status: IssueStatus,
+) => {
+  return `repo:facebook/react type:issue is:${status} in:title in:body in:comments ${searchString}`;
 };
 
 export const filterOutNotIssues = (data: IssuesNode[]) => {

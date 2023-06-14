@@ -8,7 +8,9 @@ export const Content: FC<{ username: string }> = ({ username }) => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="h3">You logged in as ${username}</Typography>
+        <Typography variant="h3" style={{ margin: '20px auto' }}>
+          You logged in as ${username}
+        </Typography>
         <Grid container spacing={2}>
           <IssuesContainer />
         </Grid>

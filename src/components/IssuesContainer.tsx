@@ -5,8 +5,15 @@ import { useQuery } from '@apollo/client';
 import { IssuesList } from './IssuesList';
 import SearchBar from './SearchBar';
 import { ISSUES_QUERY } from '../queries/issues.query';
-import { SearchNodes } from '../common/types';
-import { Alert, IconButton, Typography } from '@mui/material';
+import { IssueStatus, SearchNodes } from '../common/types';
+import {
+  Alert,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  Switch,
+  Typography,
+} from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { LinearLoader } from './LinearLoader';
@@ -18,6 +25,8 @@ import { filterOutNotIssues, formatSearchIssuesQuery } from '../common/utils';
 export function IssuesContainer() {
   const SEARCH_LIMIT = 2;
   const [input, setInput] = useState('');
+  const [status, setStatus] = useState<IssueStatus>('open');
+
   const {
     refetch,
     loading,
@@ -25,7 +34,7 @@ export function IssuesContainer() {
     data = DEFAULT_SEARCH_NODES,
   } = useQuery<SearchNodes>(ISSUES_QUERY, {
     variables: {
-      text: formatSearchIssuesQuery(input),
+      text: formatSearchIssuesQuery(input, status),
       first: SEARCH_LIMIT,
       after: null,
       before: null,
@@ -36,7 +45,7 @@ export function IssuesContainer() {
 
   const getNextPage = () => {
     refetch({
-      text: formatSearchIssuesQuery(input),
+      text: formatSearchIssuesQuery(input, status),
       first: SEARCH_LIMIT,
       after: data.search.pageInfo.endCursor,
       before: null,
@@ -45,7 +54,7 @@ export function IssuesContainer() {
   };
   const getPrevPage = () => {
     refetch({
-      text: formatSearchIssuesQuery(input),
+      text: formatSearchIssuesQuery(input, status),
       last: SEARCH_LIMIT,
       before: data.search.pageInfo.startCursor,
       after: null,
@@ -54,7 +63,7 @@ export function IssuesContainer() {
   };
   const triggerSearch = () => {
     refetch({
-      text: formatSearchIssuesQuery(input),
+      text: formatSearchIssuesQuery(input, status),
       first: SEARCH_LIMIT,
       after: null,
       before: null,
@@ -63,7 +72,7 @@ export function IssuesContainer() {
 
   useEffect(() => {
     refetch({
-      text: formatSearchIssuesQuery(input),
+      text: formatSearchIssuesQuery(input, status),
       first: SEARCH_LIMIT,
     });
   }, []);
@@ -82,12 +91,20 @@ export function IssuesContainer() {
     <>
       <Grid xs={6} md={4}>
         <ContentContainer>
-          <Typography variant="h6" component="div">
-            Presented: {issues.length}
-          </Typography>
-          <Typography variant="h6" component="div">
-            Total: {totalIssuesCount}
-          </Typography>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  defaultChecked
+                  checked={status === 'open'}
+                  onChange={(event, checked) =>
+                    setStatus(checked ? 'open' : 'closed')
+                  }
+                />
+              }
+              label={status.toUpperCase()}
+            />
+          </FormGroup>
           <SearchBar handleInput={handleInput} handleEnter={triggerSearch} />
         </ContentContainer>
       </Grid>
@@ -99,6 +116,10 @@ export function IssuesContainer() {
             <Alert severity="error">{error.message}</Alert>
           ) : (
             <>
+              <Typography variant="h6" component="div">
+                Presented: {issues.length} of {totalIssuesCount}
+              </Typography>
+
               <NavigateContainer>
                 <IconButton onClick={getPrevPage} disabled={!hasPreviousPage}>
                   <ArrowBackIosNewIcon />

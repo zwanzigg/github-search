@@ -7,7 +7,7 @@ export const SearchBar: FC<{
   handleEnter: () => void;
 }> = ({ handleEnter, handleInput }): ReactElement => {
   return (
-    <Box className="SearchBarWrap">
+    <Box style={{ width: '100%' }}>
       <TextField
         InputProps={{
           endAdornment: (
@@ -21,12 +21,11 @@ export const SearchBar: FC<{
         onChange={handleInput}
         label="Search issues"
         sx={{
-          width: 350,
+          width: '100%',
           margin: '10px auto',
         }}
         onKeyPress={(ev: React.KeyboardEvent<HTMLDivElement>) => {
           if (ev?.key === 'Enter') {
-            // Do code here
             ev.preventDefault();
             handleEnter();
           }

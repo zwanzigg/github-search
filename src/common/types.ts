@@ -38,3 +38,5 @@ export interface IssuesCommentsNode {
   body: string;
   author: NodeAuthor;
 }
+
+export type IssueStatus = 'open' | 'closed';
