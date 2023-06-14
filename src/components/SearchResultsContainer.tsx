@@ -4,7 +4,7 @@ import { NavigateContainer } from './styled/NavigateContainer';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IssuesList } from './IssuesList';
-import { ContentContainer } from './styled/ContentContainer';
+import { PaperWrap } from './styled/PaperWrap';
 import * as React from 'react';
 import { FC, ReactElement } from 'react';
 import { filterOutNotIssues, formatSearchIssuesQuery } from '../common/utils';
@@ -47,7 +47,7 @@ export const SearchResultsContainer: FC<{
     });
   };
   return (
-    <ContentContainer>
+    <PaperWrap>
       {loading ? (
         <LinearLoader />
       ) : error ? (
@@ -70,6 +70,6 @@ export const SearchResultsContainer: FC<{
           <IssuesList list={issues} />
         </>
       )}
-    </ContentContainer>
+    </PaperWrap>
   );
 };

@@ -42,8 +42,11 @@ export const ISSUES_QUERY = gql`
           comments(first: 10) {
             nodes {
               body
+              bodyHTML
               author {
+                avatarUrl
                 login
+                url
               }
             }
           }

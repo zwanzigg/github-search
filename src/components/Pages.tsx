@@ -3,9 +3,9 @@ import { useLazyQuery } from '@apollo/client';
 import { Alert, Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { LinearLoader } from './LinearLoader';
-import { ContentContainer } from './styled/ContentContainer';
+import { PaperWrap } from './styled/PaperWrap';
 import { LOGIN_QUERY } from '../queries/login.query';
-import { Content } from './Content';
+import { ContentContainer } from './ContentContainer';
 
 export const Pages = (): ReactElement => {
   const [login, { data, loading, error }] = useLazyQuery(LOGIN_QUERY);
@@ -20,11 +20,11 @@ export const Pages = (): ReactElement => {
       ) : (
         <>
           {username ? (
-            <Content username={username} />
+            <ContentContainer username={username} />
           ) : (
-            <ContentContainer>
+            <PaperWrap>
               <Button onClick={() => login()}>LOGIN</Button>
-            </ContentContainer>
+            </PaperWrap>
           )}
         </>
       )}
