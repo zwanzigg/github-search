@@ -1,4 +1,4 @@
-export interface SearchNodes {
+export interface SearchIssuesResult {
   search: {
     issueCount: number;
     nodes: IssuesNode[];
@@ -20,7 +20,7 @@ export interface IssuesNode {
   bodyHTML: string;
   createdAt: Date;
   title: string;
-  comments: IssuesComments;
+  comments: SearchCommentsResult;
   id: string;
   __typename: string;
 }
@@ -31,13 +31,25 @@ export interface NodeAuthor {
   url: string;
 }
 
-export interface IssuesComments {
+export interface SearchCommentsResult {
   nodes: IssuesCommentsNode[];
+  pageInfo: {
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    endCursor: string | null;
+    startCursor: string | null;
+  };
+  totalCount: number;
+  edges: {
+    cursor: string;
+  }[];
 }
 
 export interface IssuesCommentsNode {
   body: string;
+  bodyHTML: string;
   author: NodeAuthor;
+  id: string;
 }
 
 export type IssueStatus = 'open' | 'closed';

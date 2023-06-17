@@ -1,14 +1,24 @@
 import * as React from 'react';
-import {FC, ReactElement} from 'react';
-import {IssueStatus, SearchNodes, SearchVariables} from '../common/types';
-import {DEFAULT_SEARCH_NODES,} from '../common/constants';
-import {AppBar, Typography} from '@mui/material';
+import { FC, ReactElement } from 'react';
+import {
+  IssueStatus,
+  SearchIssuesResult,
+  SearchVariables,
+} from '../common/types';
+import {
+  DEFAULT_COMMENTS_RESULTS,
+  DEFAULT_ISSUES_SEARCH_RESULTS,
+} from '../common/constants';
+import { AppBar, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import {SearchBarContainer} from './SearchBarContainer';
-import {CommentsContainer} from './CommentsContainer';
-import {SearchResultsContainer} from './SearchResultsContainer';
+import { SearchBarContainer } from './SearchBarContainer';
+import { CommentsContainer } from './CommentsContainer';
+import { SearchResultsContainer } from './SearchResultsContainer';
+import { ApolloQueryResult, useReactiveVar } from '@apollo/client';
+import { currentIssueId } from '../common/constants';
+import { ApolloError } from '@apollo/client/errors';
 
 export const Content: FC<{
   username: string;
@@ -19,11 +29,13 @@ export const Content: FC<{
     checked: boolean,
   ) => void;
   status: IssueStatus;
-  data: SearchNodes;
+  data: SearchIssuesResult;
   loading: boolean;
-  error: any;
+  error: ApolloError  | undefined;
   input: string;
-  refetch: (variables?: Partial<SearchVariables> | undefined) => Promise<any>;
+  refetch: (
+    variables?: Partial<SearchVariables> | undefined,
+  ) => Promise<ApolloQueryResult<SearchIssuesResult>>;
 }> = ({
   username,
   refetch,
@@ -32,10 +44,17 @@ export const Content: FC<{
   handleInputChange,
   handleStatusChange,
   status,
-  data = DEFAULT_SEARCH_NODES,
+  data = DEFAULT_ISSUES_SEARCH_RESULTS,
   loading,
   error,
 }): ReactElement => {
+  const currentID = useReactiveVar(currentIssueId);
+
+  const comments =
+    (data?.search?.nodes.length &&
+      data?.search?.nodes.find((item) => item.id === currentID)?.comments) ||
+    DEFAULT_COMMENTS_RESULTS;
+
   return (
     <>
       <AppBar
@@ -80,7 +99,7 @@ export const Content: FC<{
       </AppBar>
       <Grid container spacing={5} style={{ marginTop: '10px' }}>
         <Grid xs={6} md={4}>
-          <CommentsContainer data={data} />
+          <CommentsContainer comments={comments} />
         </Grid>
         <Grid xs={6} md={8}>
           <SearchResultsContainer

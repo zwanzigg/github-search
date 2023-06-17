@@ -2,19 +2,19 @@ import React, { FC, ReactElement, useEffect } from 'react';
 import { Box, List } from '@mui/material';
 import { IssuesNode } from '../common/types';
 import { NestedList } from './IssuesItem';
+import { currentIssueId } from '../common/constants';
 
 export const IssuesList: FC<{
   list: IssuesNode[];
 }> = ({ list }): ReactElement => {
-  const [openedId, setOpenedId] = React.useState('');
-
   const handleOpenIssue = (id: string) => {
-    setOpenedId(openedId === id ? '' : id);
+    const newId = id === currentIssueId() ? '' : id;
+    currentIssueId(newId);
   };
-
-  useEffect(() => {
-    setOpenedId('');
-  }, [list]);
+  //
+  // useEffect(() => {
+  //   currentIssueId('');
+  // }, [list]);
 
   return (
     <Box>
@@ -31,7 +31,6 @@ export const IssuesList: FC<{
             <NestedList
               key={item.id}
               handleOpenIssue={handleOpenIssue}
-              openedId={openedId}
               item={item}
             />
           ) : null,

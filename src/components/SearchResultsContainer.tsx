@@ -10,18 +10,22 @@ import { FC, ReactElement } from 'react';
 import { filterOutNotIssues, formatSearchIssuesQuery } from '../common/utils';
 import { SEARCH_LIMIT } from '../common/constants';
 import { ApolloError } from '@apollo/client/errors';
-import { IssueStatus, SearchNodes, SearchVariables } from '../common/types';
+import {
+  IssueStatus,
+  SearchIssuesResult,
+  SearchVariables,
+} from '../common/types';
 import { ApolloQueryResult } from '@apollo/client';
 
 export const SearchResultsContainer: FC<{
   error: ApolloError | undefined;
   loading: boolean;
-  data: SearchNodes;
+  data: SearchIssuesResult;
   input: string;
   status: IssueStatus;
   refetch: (
     variables?: Partial<SearchVariables> | undefined,
-  ) => Promise<ApolloQueryResult<SearchNodes>>;
+  ) => Promise<ApolloQueryResult<SearchIssuesResult>>;
 }> = ({ error, loading, data, refetch, input, status }): ReactElement => {
   const issues = filterOutNotIssues(data.search.nodes);
   const totalIssuesCount = data.search.issueCount;
@@ -55,7 +59,7 @@ export const SearchResultsContainer: FC<{
       ) : (
         <>
           <Typography variant="h6" component="div">
-            Presented: {issues.length} of {totalIssuesCount}
+            Issues Presented: {issues.length} of {totalIssuesCount}
           </Typography>
 
           <NavigateContainer>

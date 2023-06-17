@@ -1,21 +1,14 @@
 import * as React from 'react';
 import { FC, ReactElement, useEffect, useState } from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useQuery } from '@apollo/client';
 import { ISSUES_QUERY } from '../queries/issues.query';
-import { IssueStatus, SearchNodes } from '../common/types';
+import { IssueStatus, SearchIssuesResult } from '../common/types';
 import {
-  DEFAULT_SEARCH_NODES,
+  DEFAULT_ISSUES_SEARCH_RESULTS,
   DEFAULT_SEARCH_VARIABLES,
   SEARCH_LIMIT,
 } from '../common/constants';
 import { formatSearchIssuesQuery } from '../common/utils';
-import { SearchBarContainer } from './SearchBarContainer';
-import { AppBar, Typography } from '@mui/material';
-import Box from '@mui/material/Box';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { CommentsContainer } from './CommentsContainer';
-import { SearchResultsContainer } from './SearchResultsContainer';
 import { Content } from './Content';
 
 export const ContentContainer: FC<{ username: string }> = ({
@@ -28,8 +21,8 @@ export const ContentContainer: FC<{ username: string }> = ({
     refetch,
     loading,
     error,
-    data = DEFAULT_SEARCH_NODES,
-  } = useQuery<SearchNodes>(ISSUES_QUERY, {
+    data = DEFAULT_ISSUES_SEARCH_RESULTS,
+  } = useQuery<SearchIssuesResult>(ISSUES_QUERY, {
     variables: DEFAULT_SEARCH_VARIABLES,
     nextFetchPolicy: 'cache-first', // TODO: set up caching strategy
   });

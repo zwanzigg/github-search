@@ -40,7 +40,18 @@ export const ISSUES_QUERY = gql`
           createdAt
           title
           comments(first: 10) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              endCursor
+              startCursor
+            }
+            totalCount
+            edges {
+              cursor
+            }
             nodes {
+              id
               body
               bodyHTML
               author {

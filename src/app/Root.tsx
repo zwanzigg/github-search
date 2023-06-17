@@ -1,7 +1,6 @@
 import React from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { Pages } from '../components/Pages';
-
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
 const client = new ApolloClient({

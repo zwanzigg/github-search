@@ -4,7 +4,7 @@ export const formatSearchIssuesQuery = (
   searchString: string,
   status: IssueStatus,
 ) => {
-  return `repo:facebook/react type:issue is:${status} in:title in:body in:comments ${searchString}`;
+  return `repo:facebook/react type:issue is:${status} in:title in:body in:comments sort:comments-desc ${searchString}`;
 };
 
 export const filterOutNotIssues = (data: IssuesNode[]) => {

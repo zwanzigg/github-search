@@ -9,13 +9,16 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
 import { IssuesNode } from '../common/types';
+import { useReactiveVar } from '@apollo/client';
+import { currentIssueId } from '../common/constants';
 
 export const NestedList: FC<{
   item: IssuesNode;
   handleOpenIssue: (id: string) => void;
-  openedId: string;
-}> = ({ item, handleOpenIssue, openedId }): ReactElement => {
-  const isOpened = item.id === openedId;
+}> = ({ item, handleOpenIssue }): ReactElement => {
+  const currentID = useReactiveVar(currentIssueId);
+
+  const isOpened = item.id === currentID;
   return (
     <>
       <ListItemButton
