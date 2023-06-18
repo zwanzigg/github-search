@@ -35,7 +35,6 @@ export const ISSUES_QUERY = gql`
             login
             url
           }
-          body
           bodyHTML
           createdAt
           title
@@ -52,7 +51,6 @@ export const ISSUES_QUERY = gql`
             }
             nodes {
               id
-              body
               bodyHTML
               author {
                 avatarUrl

@@ -1,9 +1,8 @@
-import { ListItem, Typography } from '@mui/material';
+import { ListItem, Paper, Typography } from '@mui/material';
 import { PaperWrap } from './styled/PaperWrap';
 import * as React from 'react';
 import { FC, ReactElement } from 'react';
 import { IssuesCommentsNode, SearchCommentsResult } from '../common/types';
-import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
 import CommentIcon from '@mui/icons-material/Comment';
 import IconButton from '@mui/material/IconButton';
@@ -12,6 +11,7 @@ export const CommentsContainer: FC<{
   comments: SearchCommentsResult;
 }> = ({ comments }): ReactElement => {
   const commentsNodes = comments.nodes as IssuesCommentsNode[];
+
   return (
     <PaperWrap>
       <>
@@ -37,7 +37,22 @@ export const CommentsContainer: FC<{
               </IconButton>
             }
           >
-            <ListItemText primary={item.body} />
+            <List component="div" disablePadding>
+              <Paper
+                key={item.id}
+                sx={{
+                  textAlign: 'left',
+                  padding: '10px 20px',
+                  backgroundColor: '#0000000f',
+                  marginTop: '10px',
+                  borderRadius: '7px',
+                }}
+              >
+                <div
+                  dangerouslySetInnerHTML={{ __html: item.bodyHTML.toString() }}
+                />
+              </Paper>
+            </List>
           </ListItem>
         ))}
       </List>

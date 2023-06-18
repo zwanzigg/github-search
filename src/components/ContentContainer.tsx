@@ -1,81 +1,33 @@
 import * as React from 'react';
-import { FC, ReactElement, useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { FC, ReactElement } from 'react';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { ISSUES_QUERY } from '../queries/issues.query';
-import { IssueStatus, SearchIssuesResult } from '../common/types';
+import { SearchIssuesResult } from '../common/types';
 import {
+  currentSearchVariables,
   DEFAULT_ISSUES_SEARCH_RESULTS,
-  DEFAULT_SEARCH_VARIABLES,
-  SEARCH_LIMIT,
 } from '../common/constants';
-import { formatSearchIssuesQuery } from '../common/utils';
 import { Content } from './Content';
 
 export const ContentContainer: FC<{ username: string }> = ({
   username,
 }): ReactElement => {
-  const [input, setInput] = useState('');
-  const [status, setStatus] = useState<IssueStatus>('open');
-
+  const currentVariables = useReactiveVar(currentSearchVariables);
   const {
-    refetch,
     loading,
     error,
     data = DEFAULT_ISSUES_SEARCH_RESULTS,
   } = useQuery<SearchIssuesResult>(ISSUES_QUERY, {
-    variables: DEFAULT_SEARCH_VARIABLES,
-    nextFetchPolicy: 'cache-first', // TODO: set up caching strategy
+    variables: currentVariables,
   });
 
-  const triggerSearch = () => {
-    refetch({
-      text: formatSearchIssuesQuery(input, status),
-      first: SEARCH_LIMIT,
-      last: null,
-      after: null,
-      before: null,
-    });
-  };
-
-  useEffect(() => {
-    refetch({
-      text: formatSearchIssuesQuery(input, status),
-      first: SEARCH_LIMIT,
-    });
-  }, []);
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value || '';
-    setInput(value);
-  };
-
-  const handleStatusChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean,
-  ) => {
-    const newStatus = checked ? 'open' : 'closed';
-    setStatus(newStatus);
-    refetch({
-      text: formatSearchIssuesQuery(input, newStatus),
-      first: SEARCH_LIMIT,
-      last: null,
-      after: null,
-      before: null,
-    });
-  };
-
+  const notReLoading = loading && !data?.search?.nodes.length;
   return (
     <Content
       username={username}
-      triggerSearch={triggerSearch}
-      handleInputChange={handleInputChange}
-      handleStatusChange={handleStatusChange}
-      status={status}
       data={data}
-      loading={loading}
+      loading={notReLoading}
       error={error}
-      input={input}
-      refetch={refetch}
     />
   );
 };

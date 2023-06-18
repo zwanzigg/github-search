@@ -1,4 +1,5 @@
 import {
+  IssueStatus,
   SearchCommentsResult,
   SearchIssuesResult,
   SearchVariables,
@@ -44,3 +45,11 @@ export const DEFAULT_SEARCH_VARIABLES: SearchVariables = {
   before: null,
   last: null,
 };
+
+export const currentSearchVariables = makeVar<SearchVariables>(
+  DEFAULT_SEARCH_VARIABLES,
+);
+
+export const currentSearchInput = makeVar('');
+
+export const currentSearchStatus = makeVar<IssueStatus>('open');

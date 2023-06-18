@@ -1,60 +1,36 @@
 import * as React from 'react';
 import { FC, ReactElement } from 'react';
+import { SearchIssuesResult } from '../common/types';
 import {
-  IssueStatus,
-  SearchIssuesResult,
-  SearchVariables,
-} from '../common/types';
-import {
+  currentIssueId,
   DEFAULT_COMMENTS_RESULTS,
   DEFAULT_ISSUES_SEARCH_RESULTS,
 } from '../common/constants';
-import { AppBar, Typography } from '@mui/material';
+import { AppBar } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import Box from '@mui/material/Box';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { SearchBarContainer } from './SearchBarContainer';
 import { CommentsContainer } from './CommentsContainer';
 import { SearchResultsContainer } from './SearchResultsContainer';
-import { ApolloQueryResult, useReactiveVar } from '@apollo/client';
-import { currentIssueId } from '../common/constants';
+import { useReactiveVar } from '@apollo/client';
 import { ApolloError } from '@apollo/client/errors';
+import { User } from './User';
 
 export const Content: FC<{
   username: string;
-  triggerSearch: () => void;
-  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleStatusChange: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean,
-  ) => void;
-  status: IssueStatus;
   data: SearchIssuesResult;
   loading: boolean;
-  error: ApolloError  | undefined;
-  input: string;
-  refetch: (
-    variables?: Partial<SearchVariables> | undefined,
-  ) => Promise<ApolloQueryResult<SearchIssuesResult>>;
+  error: ApolloError | undefined;
 }> = ({
   username,
-  refetch,
-  input,
-  triggerSearch,
-  handleInputChange,
-  handleStatusChange,
-  status,
   data = DEFAULT_ISSUES_SEARCH_RESULTS,
   loading,
   error,
 }): ReactElement => {
   const currentID = useReactiveVar(currentIssueId);
-
   const comments =
     (data?.search?.nodes.length &&
       data?.search?.nodes.find((item) => item.id === currentID)?.comments) ||
     DEFAULT_COMMENTS_RESULTS;
-
   return (
     <>
       <AppBar
@@ -63,37 +39,10 @@ export const Content: FC<{
       >
         <Grid container spacing={5} margin={0}>
           <Grid xs={1} md={1}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                height: '100%',
-                justifyContent: 'center',
-              }}
-            >
-              <AccountCircleIcon color={'primary'} />
-              <Typography variant="body1" color={'primary'}>
-                @{username}
-              </Typography>
-            </Box>
+            <User username={username} />
           </Grid>
           <Grid xs={11} md={11}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-                justifyContent: 'space-between',
-              }}
-            >
-              <SearchBarContainer
-                triggerSearch={triggerSearch}
-                handleInput={handleInputChange}
-                handleStatusChange={handleStatusChange}
-                status={status}
-              />
-            </Box>
+            <SearchBarContainer />
           </Grid>
         </Grid>
       </AppBar>
@@ -102,14 +51,7 @@ export const Content: FC<{
           <CommentsContainer comments={comments} />
         </Grid>
         <Grid xs={6} md={8}>
-          <SearchResultsContainer
-            data={data}
-            error={error}
-            loading={loading}
-            refetch={refetch}
-            input={input}
-            status={status}
-          />
+          <SearchResultsContainer data={data} error={error} loading={loading} />
         </Grid>
       </Grid>
     </>
