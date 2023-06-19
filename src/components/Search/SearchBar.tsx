@@ -3,29 +3,26 @@ import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useReactiveVar } from '@apollo/client';
 import {
-  currentSearchInput,
-  currentSearchStatus,
-  currentSearchVariables,
-  SEARCH_LIMIT,
-} from '../common/constants';
-import { formatSearchIssuesQuery } from '../common/utils';
+  DEFAULT_SEARCH_VARIABLES,
+  reactiveCurrentSearchInput,
+  reactiveCurrentSearchStatus,
+  reactiveCurrentSearchVariables,
+} from '../../common/constants';
+import { formatSearchIssuesQuery } from '../../common/utils';
 
 export const SearchBar = (): ReactElement => {
-  const currentInput = useReactiveVar(currentSearchInput);
-  const currentStatus = useReactiveVar(currentSearchStatus);
+  const currentSearchInput = useReactiveVar(reactiveCurrentSearchInput);
+  const currentSearchStatus = useReactiveVar(reactiveCurrentSearchStatus);
 
   const triggerSearch = () => {
-    currentSearchVariables({
-      text: formatSearchIssuesQuery(currentInput, currentStatus),
-      first: SEARCH_LIMIT,
-      last: null,
-      after: null,
-      before: null,
+    reactiveCurrentSearchVariables({
+      ...DEFAULT_SEARCH_VARIABLES,
+      text: formatSearchIssuesQuery(currentSearchInput, currentSearchStatus),
     });
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value || '';
-    currentSearchInput(value);
+    reactiveCurrentSearchInput(value);
   };
   return (
     <Box style={{ width: '100%' }}>
@@ -44,6 +41,12 @@ export const SearchBar = (): ReactElement => {
         }}
         onChange={handleInputChange}
         label="Search issues"
+        FormHelperTextProps={{
+          style: {
+            margin: 0,
+          },
+        }}
+        helperText="Press 'Enter' to search"
         sx={{
           width: '100%',
           margin: '10px auto',

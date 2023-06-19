@@ -1,17 +1,17 @@
-import { LinearLoader } from './LinearLoader';
+import { LinearLoader } from '../LinearLoader';
 import { Alert, IconButton, Typography } from '@mui/material';
-import { NavigateContainer } from './styled/NavigateContainer';
+import { NavigateContainer } from '../styled/NavigateContainer';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IssuesList } from './IssuesList';
-import { PaperWrap } from './styled/PaperWrap';
+import { PaperWrap } from '../styled/PaperWrap';
 import * as React from 'react';
 import { FC, ReactElement } from 'react';
-import { getNextPage, getPrevPage } from '../common/utils';
+import { getNextPage, getPrevPage } from '../../common/utils';
 import { ApolloError } from '@apollo/client/errors';
-import { SearchIssuesResult } from '../common/types';
+import { SearchIssuesResult } from '../../common/types';
 
-export const SearchResultsContainer: FC<{
+export const IssuesContainer: FC<{
   error: ApolloError | undefined;
   loading: boolean;
   data: SearchIssuesResult;
@@ -20,6 +20,8 @@ export const SearchResultsContainer: FC<{
   const totalIssuesCount = data.search.issueCount;
   const hasNextPage = data.search.pageInfo.hasNextPage;
   const hasPreviousPage = data.search.pageInfo.hasPreviousPage;
+  const startCursor = data.search.pageInfo.startCursor;
+  const endCursor = data.search.pageInfo.endCursor;
 
   return (
     <PaperWrap>
@@ -32,16 +34,15 @@ export const SearchResultsContainer: FC<{
           <Typography variant="h6" component="div">
             Issues Presented: {displayedIssuesLength} of {totalIssuesCount}
           </Typography>
-
           <NavigateContainer>
             <IconButton
-              onClick={() => getPrevPage(data.search.pageInfo.endCursor)}
+              onClick={() => getPrevPage(startCursor)}
               disabled={!hasPreviousPage}
             >
               <ArrowBackIosNewIcon />
             </IconButton>
             <IconButton
-              onClick={() => getNextPage(data.search.pageInfo.startCursor)}
+              onClick={() => getNextPage(endCursor)}
               disabled={!hasNextPage}
             >
               <ArrowForwardIosIcon />

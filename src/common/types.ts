@@ -2,9 +2,6 @@ export interface SearchIssuesResult {
   search: {
     issueCount: number;
     nodes: IssuesNode[];
-    edges: {
-      cursor: string;
-    }[];
     pageInfo: {
       hasNextPage: boolean;
       hasPreviousPage: boolean;
@@ -22,6 +19,7 @@ export interface IssuesNode {
   title: string;
   comments: SearchCommentsResult;
   id: string;
+  number: number;
   __typename: string;
 }
 
@@ -40,9 +38,6 @@ export interface SearchCommentsResult {
     startCursor: string | null;
   };
   totalCount: number;
-  edges: {
-    cursor: string;
-  }[];
 }
 
 export interface IssuesCommentsNode {
@@ -50,6 +45,7 @@ export interface IssuesCommentsNode {
   bodyHTML: string;
   author: NodeAuthor;
   id: string;
+  __ref: string;
 }
 
 export type IssueStatus = 'open' | 'closed';
@@ -60,4 +56,6 @@ export interface SearchVariables {
   last: number | null;
   after: string | null;
   before: string | null;
+  comments_first: number | null;
+  comments_after: string | null;
 }

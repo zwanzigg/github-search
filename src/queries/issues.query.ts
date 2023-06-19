@@ -7,6 +7,8 @@ export const ISSUES_QUERY = gql`
     $last: Int
     $after: String
     $before: String
+    $comments_first: Int
+    $comments_after: String
   ) {
     search(
       type: ISSUE
@@ -23,9 +25,6 @@ export const ISSUES_QUERY = gql`
         startCursor
       }
       issueCount
-      edges {
-        cursor
-      }
       nodes {
         __typename
         ... on Issue {
@@ -35,10 +34,11 @@ export const ISSUES_QUERY = gql`
             login
             url
           }
+          number
           bodyHTML
           createdAt
           title
-          comments(first: 10) {
+          comments(first: $comments_first, after: $comments_after) {
             pageInfo {
               hasNextPage
               hasPreviousPage
@@ -46,9 +46,6 @@ export const ISSUES_QUERY = gql`
               startCursor
             }
             totalCount
-            edges {
-              cursor
-            }
             nodes {
               id
               bodyHTML

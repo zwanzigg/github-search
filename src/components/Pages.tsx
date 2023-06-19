@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { LinearLoader } from './LinearLoader';
 import { PaperWrap } from './styled/PaperWrap';
 import { LOGIN_QUERY } from '../queries/login.query';
-import { ContentContainer } from './ContentContainer';
+import { Layout } from './Layout';
 
 export const Pages = (): ReactElement => {
   const [login, { data, loading, error }] = useLazyQuery(LOGIN_QUERY);
@@ -20,7 +20,7 @@ export const Pages = (): ReactElement => {
       ) : (
         <>
           {username ? (
-            <ContentContainer username={username} />
+            <Layout username={username} />
           ) : (
             <PaperWrap>
               <Button onClick={() => login()}>LOGIN</Button>

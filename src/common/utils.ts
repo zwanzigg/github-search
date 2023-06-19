@@ -1,8 +1,10 @@
-import { IssuesNode, IssueStatus } from './types';
+import { IssuesNode, IssueStatus, SearchIssuesResult } from './types';
 import {
-  currentSearchInput,
-  currentSearchStatus,
-  currentSearchVariables,
+  DEFAULT_COMMENTS_RESULTS,
+  DEFAULT_SEARCH_VARIABLES,
+  reactiveCurrentSearchInput,
+  reactiveCurrentSearchStatus,
+  reactiveCurrentSearchVariables,
   SEARCH_LIMIT,
 } from './constants';
 
@@ -18,8 +20,12 @@ export const filterOutNotIssues = (data: IssuesNode[]) => {
 };
 
 export const getNextPage = (endCursor: string | null) => {
-  currentSearchVariables({
-    text: formatSearchIssuesQuery(currentSearchInput(), currentSearchStatus()),
+  reactiveCurrentSearchVariables({
+    ...DEFAULT_SEARCH_VARIABLES,
+    text: formatSearchIssuesQuery(
+      reactiveCurrentSearchInput(),
+      reactiveCurrentSearchStatus(),
+    ),
     first: SEARCH_LIMIT,
     after: endCursor,
     before: null,
@@ -27,11 +33,26 @@ export const getNextPage = (endCursor: string | null) => {
   });
 };
 export const getPrevPage = (startCursor: string | null) => {
-  currentSearchVariables({
-    text: formatSearchIssuesQuery(currentSearchInput(), currentSearchStatus()),
+  reactiveCurrentSearchVariables({
+    ...DEFAULT_SEARCH_VARIABLES,
+    text: formatSearchIssuesQuery(
+      reactiveCurrentSearchInput(),
+      reactiveCurrentSearchStatus(),
+    ),
     last: SEARCH_LIMIT,
     before: startCursor,
     after: null,
     first: null,
   });
+};
+
+export const getCommentsForCurrentIssue = (
+  data: SearchIssuesResult,
+  issueId: string,
+) => {
+  return (
+    (data?.search?.nodes.length &&
+      data?.search?.nodes.find((item) => item.id === issueId)?.comments) ||
+    DEFAULT_COMMENTS_RESULTS
+  );
 };

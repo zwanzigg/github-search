@@ -8,13 +8,12 @@ import { formatSearchIssuesQuery } from './utils';
 
 import { makeVar } from '@apollo/client';
 
-export const currentIssueId = makeVar('');
+export const GITHUB_GRAPHQL_API_URL = 'https://api.github.com/graphql';
 
 export const DEFAULT_ISSUES_SEARCH_RESULTS: SearchIssuesResult = {
   search: {
     issueCount: 0,
     nodes: [],
-    edges: [],
     pageInfo: {
       hasNextPage: false,
       hasPreviousPage: false,
@@ -27,7 +26,6 @@ export const DEFAULT_ISSUES_SEARCH_RESULTS: SearchIssuesResult = {
 export const DEFAULT_COMMENTS_RESULTS: SearchCommentsResult = {
   totalCount: 0,
   nodes: [],
-  edges: [],
   pageInfo: {
     hasNextPage: false,
     hasPreviousPage: false,
@@ -37,6 +35,7 @@ export const DEFAULT_COMMENTS_RESULTS: SearchCommentsResult = {
 };
 
 export const SEARCH_LIMIT = 2;
+export const COMMENTS_SEARCH_LIMIT = 2;
 
 export const DEFAULT_SEARCH_VARIABLES: SearchVariables = {
   text: formatSearchIssuesQuery('', 'open'),
@@ -44,12 +43,16 @@ export const DEFAULT_SEARCH_VARIABLES: SearchVariables = {
   after: null,
   before: null,
   last: null,
+  comments_first: COMMENTS_SEARCH_LIMIT,
+  comments_after: null,
 };
 
-export const currentSearchVariables = makeVar<SearchVariables>(
+export const reactiveCurrentIssueId = makeVar('');
+
+export const reactiveCurrentSearchVariables = makeVar<SearchVariables>(
   DEFAULT_SEARCH_VARIABLES,
 );
 
-export const currentSearchInput = makeVar('');
+export const reactiveCurrentSearchInput = makeVar('');
 
-export const currentSearchStatus = makeVar<IssueStatus>('open');
+export const reactiveCurrentSearchStatus = makeVar<IssueStatus>('open');

@@ -8,17 +8,17 @@ import { Avatar, Box, ListItemAvatar, Paper, Typography } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
-import { IssuesNode } from '../common/types';
+import { IssuesNode } from '../../common/types';
 import { useReactiveVar } from '@apollo/client';
-import { currentIssueId } from '../common/constants';
+import { reactiveCurrentIssueId } from '../../common/constants';
 
 export const NestedList: FC<{
   item: IssuesNode;
   handleOpenIssue: (id: string) => void;
 }> = ({ item, handleOpenIssue }): ReactElement => {
-  const currentID = useReactiveVar(currentIssueId);
+  const currentIssueId = useReactiveVar(reactiveCurrentIssueId);
 
-  const isOpened = item.id === currentID;
+  const isOpened = item.id === currentIssueId;
   return (
     <>
       <ListItemButton
@@ -50,6 +50,7 @@ export const NestedList: FC<{
             <strong>{item.title}</strong>
           </Typography>
           <ListItemText secondary={'@' + item.author.login} />
+          <Typography variant="caption">{'ID=' + item.id}</Typography>
         </Box>
         {isOpened ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
