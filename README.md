@@ -33,7 +33,7 @@ Before running this application, make sure you have the following dependencies i
    npm install
    ```
 
-## Usage
+## Dev Usage
 
 To start the application, run the following command:
 
@@ -42,6 +42,28 @@ npm run start
 ```
 
 This will launch the application in your default web browser. You can now use the search functionality to find GitHub issues in the Facebook/React repository.
+
+
+## Production Usage
+
+To build the application for production, run the following command:
+
+```shell
+npm run build
+```
+
+This will create a production build of the application in the `build` directory. 
+To serve the application, you can use the `serve` package. If you don't have the `serve` package installed, you can install it by running the following command:
+
+```shell
+npm install -g serve
+```
+    
+Then run the following command:
+    
+```shell
+serve -s build
+```
 
 ## Contribution
 
