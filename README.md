@@ -65,6 +65,10 @@ Then run the following command:
 serve -s build
 ```
 
+## Example of usage
+
+![Alt Text](./public/assets/example-app-usage.gif)
+
 ## Contribution
 
 Contributions to this project are welcome! If you find any bugs or have suggestions for improvements, please feel free to open an issue or submit a pull request.

@@ -15,14 +15,10 @@ export const IssuesList = (): ReactElement => {
   const currentIssueId = useReactiveVar(reactiveCurrentIssueId);
 
   const client = useApolloClient();
-  const cachedData = useMemo(
-    () =>
-      client.readQuery({
-        query: ISSUES_QUERY,
-        variables: currentVariables,
-      }),
-    [currentVariables],
-  );
+  const cachedData = client.readQuery({
+    query: ISSUES_QUERY,
+    variables: currentVariables,
+  });
 
   const handleOpenIssue = useCallback(
     (id: string) => {
@@ -33,7 +29,7 @@ export const IssuesList = (): ReactElement => {
   );
   const list: IssuesNode[] = useMemo(
     () => filterOutNotIssues(cachedData?.search?.nodes),
-    [cachedData?.search?.nodes.length],
+    [cachedData?.search?.nodes[0]?.id],
   );
 
   useEffect(() => {

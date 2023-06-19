@@ -48,7 +48,6 @@ export const IssuesContainer: FC<{
               <ArrowForwardIosIcon />
             </IconButton>
           </NavigateContainer>
-
           <IssuesList />
         </>
       )}

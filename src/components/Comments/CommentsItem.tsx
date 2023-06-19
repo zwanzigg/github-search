@@ -5,7 +5,7 @@ import { Avatar, ListItem, ListItemAvatar, Paper } from '@mui/material';
 import * as React from 'react';
 import { FC, ReactElement } from 'react';
 import { NodeAuthor } from '../../common/types';
-import ListItemText from "@mui/material/ListItemText";
+import ListItemText from '@mui/material/ListItemText';
 
 export const CommentsItem: FC<{ bodyHTML: string; author: NodeAuthor }> = ({
   bodyHTML,
@@ -14,8 +14,6 @@ export const CommentsItem: FC<{ bodyHTML: string; author: NodeAuthor }> = ({
   return (
     <ListItem disableGutters>
       <List component="div" disablePadding sx={{ display: 'flex' }}>
-
-
         <ListItemAvatar>
           <Avatar
             sx={{ width: 40, height: 40 }}
