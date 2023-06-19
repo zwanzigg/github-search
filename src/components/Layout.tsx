@@ -44,7 +44,7 @@ export const Layout: FC<{
       </AppBar>
       <Grid container spacing={5} style={{ marginTop: '10px' }}>
         <Grid xs={6} md={4}>
-          <CommentsContainer loading={loading} />
+          <CommentsContainer loading={loading} data={data} />
         </Grid>
         <Grid xs={6} md={8}>
           <IssuesContainer data={data} error={error} loading={notReLoading} />

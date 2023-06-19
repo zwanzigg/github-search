@@ -14,12 +14,15 @@ export const SearchBar = (): ReactElement => {
   const currentSearchInput = useReactiveVar(reactiveCurrentSearchInput);
   const currentSearchStatus = useReactiveVar(reactiveCurrentSearchStatus);
 
-  const triggerSearch = () => {
-    reactiveCurrentSearchVariables({
-      ...DEFAULT_SEARCH_VARIABLES,
-      text: formatSearchIssuesQuery(currentSearchInput, currentSearchStatus),
-    });
-  };
+  const triggerSearch = React.useCallback(
+    () =>
+      reactiveCurrentSearchVariables({
+        ...DEFAULT_SEARCH_VARIABLES,
+        text: formatSearchIssuesQuery(currentSearchInput, currentSearchStatus),
+      }),
+    [currentSearchInput, currentSearchStatus],
+  );
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value || '';
     reactiveCurrentSearchInput(value);

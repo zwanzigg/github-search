@@ -1,45 +1,41 @@
-import { ListItem, Paper, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { PaperWrap } from '../styled/PaperWrap';
 import * as React from 'react';
-import { FC, ReactElement } from 'react';
-import { IssuesCommentsNode } from '../../common/types';
+import { FC, ReactElement, useCallback } from 'react';
+import { IssuesCommentsNode, SearchIssuesResult } from '../../common/types';
 import List from '@mui/material/List';
-import CommentIcon from '@mui/icons-material/Comment';
-import IconButton from '@mui/material/IconButton';
-import { getCommentsForCurrentIssue } from '../../common/utils';
+import { findCommentsForCurrentIssue } from '../../common/utils';
 import {
   reactiveCurrentIssueId,
   reactiveCurrentSearchVariables,
 } from '../../common/constants';
-import { useApolloClient, useReactiveVar } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { ISSUES_QUERY } from '../../queries/issues.query';
 import { CommentsItem } from './CommentsItem';
 
 export const CommentsContainer: FC<{
   loading: boolean;
-}> = ({ loading }): ReactElement => {
-  const issueId = useReactiveVar(reactiveCurrentIssueId);
-  const currentSearchVariables = useReactiveVar(reactiveCurrentSearchVariables);
-  const client = useApolloClient();
-  const data = client.readQuery({
-    query: ISSUES_QUERY,
-    variables: currentSearchVariables,
-  });
+  data: SearchIssuesResult;
+}> = ({ loading, data }): ReactElement => {
+  const currentIssueId = useReactiveVar(reactiveCurrentIssueId);
 
-  const comments = getCommentsForCurrentIssue(data, issueId);
+  const comments = findCommentsForCurrentIssue(data, currentIssueId);
+
   const commentsNodes = comments.nodes as IssuesCommentsNode[];
 
   const totalCommentsCount = comments.totalCount;
   const hasNextPage = comments.pageInfo.hasNextPage;
   const endCursor = comments.pageInfo.endCursor;
   const currentCommentsLength = commentsNodes.length;
-  const loadMore = () => {
-    reactiveCurrentSearchVariables({
-      ...currentSearchVariables,
-      comments_after: endCursor,
-    });
-  };
+
+  const loadMore = useCallback(
+    () =>
+      reactiveCurrentSearchVariables({
+        ...reactiveCurrentSearchVariables(),
+        comments_after: endCursor,
+      }),
+    [endCursor],
+  );
   return (
     <PaperWrap>
       <>
@@ -58,8 +54,10 @@ export const CommentsContainer: FC<{
         aria-label={'comments list'}
         subheader={
           <>
-            {issueId ? (
-              <Typography variant="caption">Issue ID={issueId}</Typography>
+            {currentIssueId ? (
+              <Typography variant="caption">
+                Issue ID={currentIssueId}
+              </Typography>
             ) : null}
           </>
         }

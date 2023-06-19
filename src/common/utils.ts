@@ -46,7 +46,7 @@ export const getPrevPage = (startCursor: string | null) => {
   });
 };
 
-export const getCommentsForCurrentIssue = (
+export const findCommentsForCurrentIssue = (
   data: SearchIssuesResult,
   issueId: string,
 ) => {

@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo } from 'react';
 import { Box, List } from '@mui/material';
 import { IssuesNode } from '../../common/types';
 import { NestedList } from './IssuesItem';
@@ -12,21 +12,34 @@ import { filterOutNotIssues } from '../../common/utils';
 
 export const IssuesList = (): ReactElement => {
   const currentVariables = useReactiveVar(reactiveCurrentSearchVariables);
+  const currentIssueId = useReactiveVar(reactiveCurrentIssueId);
 
-  const handleOpenIssue = (id: string) => {
-    const newId = id === reactiveCurrentIssueId() ? '' : id;
-    reactiveCurrentIssueId(newId);
-  };
   const client = useApolloClient();
-  const cachedData = client.readQuery({
-    query: ISSUES_QUERY,
-    variables: currentVariables,
-  });
-  const list: IssuesNode[] = filterOutNotIssues(cachedData?.search?.nodes);
+  const cachedData = useMemo(
+    () =>
+      client.readQuery({
+        query: ISSUES_QUERY,
+        variables: currentVariables,
+      }),
+    [currentVariables],
+  );
+
+  const handleOpenIssue = useCallback(
+    (id: string) => {
+      const newId = id === currentIssueId ? '' : id;
+      reactiveCurrentIssueId(newId);
+    },
+    [currentIssueId],
+  );
+  const list: IssuesNode[] = useMemo(
+    () => filterOutNotIssues(cachedData?.search?.nodes),
+    [cachedData?.search?.nodes.length],
+  );
 
   useEffect(() => {
     reactiveCurrentIssueId('');
   }, [list[0]?.id]);
+
   return (
     <Box>
       <List

@@ -3,21 +3,17 @@ import CommentIcon from '@mui/icons-material/Comment';
 import List from '@mui/material/List';
 import { ListItem, Paper } from '@mui/material';
 import * as React from 'react';
-import { ReactElement, FC } from 'react';
+import { FC, ReactElement } from 'react';
 
 export const CommentsItem: FC<{ bodyHTML: string }> = ({
   bodyHTML,
 }): ReactElement => {
   return (
-    <ListItem
-      disableGutters
-      secondaryAction={
+    <ListItem disableGutters>
+      <List component="div" disablePadding sx={{ display: 'flex' }}>
         <IconButton aria-label="comment">
           <CommentIcon />
         </IconButton>
-      }
-    >
-      <List component="div" disablePadding>
         <Paper
           sx={{
             textAlign: 'left',
