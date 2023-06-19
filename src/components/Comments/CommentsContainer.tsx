@@ -63,7 +63,7 @@ export const CommentsContainer: FC<{
         }
       >
         {commentsNodes.map((item) => (
-          <CommentsItem key={item.id} bodyHTML={item.bodyHTML} />
+          <CommentsItem key={item.id} bodyHTML={item.bodyHTML} author={item.author}/>
         ))}
         {hasNextPage ? (
           <LoadingButton
